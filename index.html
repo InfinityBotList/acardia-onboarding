@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Arcadia Onboarding</title>
+
+		<style>
+			h1, h2, h3, p, span, a, ul, li, ol {
+				font-family: 'Open Sans', sans-serif;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="body">Loading...</div>
+	</body>
+	<footer>
+		<div style="display:none" id="content">
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/marked@4.0.17/lib/marked.umd.min.js"></script>
+		<script>
+async function load() {
+	if(!marked) {
+		alert("Marked has failed to load!")
+		return
+	}
+
+	// Avoid caching
+	let n = Math.floor(Math.random() * 10000);
+
+	const urlParams = new URLSearchParams(window.location.search);
+
+	let content = await fetch(`/${urlParams.tok}.sovngarde?n=${n}`)
+
+	let json = await content.json()
+
+	document.querySelector("#body").innerHTML = marked.marked(json.docs_str)
+}
+
+async function loadOS() {
+    let os = document.querySelector("#os").value
+
+	let n = Math.floor(Math.random() * 10000);
+
+	let res = await fetch(`/${os}.md?n=${n}`)
+
+	let text = await res.text()
+
+	document.querySelector("#os-specific").innerHTML = marked.marked(text)
+}
+
+window.addEventListener('DOMContentLoaded', (event) => {
+	load()
+})
+
+try { load() } catch {}
+		</script>
+	</footer>
+</html>
